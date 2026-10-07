@@ -1,54 +1,59 @@
-import { Navbar, Nav, Container } from 'react-bootstrap';
 import styles from "../../styles/Home.module.css";
-import { auth } from "../../services/firebaseService"
+import { auth } from "../../services/firebaseService";
 import { useRouter } from "next/router";
 import { detectPage } from "../../services/pageDetector";
 import { useAuthState } from 'react-firebase-hooks/auth';
-const staticData = require("../../staticData.json")
-import firebase from "firebase";
+const staticData = require("../../staticData.json");
+
+const primaryLinks = [
+    { label: "Home", href: "/", page: "home" },
+    { label: "Projects", href: "/projects", page: "projects" },
+    { label: "Experience", href: "/experiences", page: "experiences" },
+    { label: "Writing", href: "/blogs", page: "blogs" }
+];
 
 export default function Header() {
     const router = useRouter();
-    console.log(firebase.auth());
-    const [user, loading, error] = useAuthState(firebase.auth());
+    const [user, loading] = useAuthState(auth);
     const currentPage = detectPage(router.pathname);
-    let isLogged = false;
-    let isAdmin = false;
-
-    if (loading || error || !user) {
-        isLogged = false;
-    }else{
-        isLogged = true;
-        isAdmin = staticData.adminData.adminIds.includes(user.uid)
-    }
+    const isLogged = Boolean(user) && !loading;
+    const isAdmin = isLogged && staticData.adminData.adminIds.includes(user.uid);
+    const linkClassName = page => {
+        const relatedPages = {
+            projects: ["projects", "projectEdit", "projectSingle"],
+            experiences: ["experiences", "experienceEdit", "experienceSingle"],
+            blogs: ["blogs", "blogEdit", "blogSingle"]
+        };
+        const pageIds = relatedPages[page] || [page];
+        const isActive = pageIds.some(pageId => currentPage === staticData.pathingData.pageEnum[pageId]);
+        return `${styles.navigationLink} ${isActive ? styles.navigationLinkActive : ""}`;
+    };
 
     return (
-        <Navbar className={styles.header} expand="lg">
-            <Container>
-                <Navbar.Brand className={styles.headerBrand}>{staticData.websiteData.title}</Navbar.Brand>
-
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
-                        <Nav.Link className={styles.headerNavLink} href={staticData.pathingData.baseUrl + "/"} active={currentPage === staticData.pathingData.pageEnum.home}>Home</Nav.Link>
-                        <Nav.Link className={styles.headerNavLink} href={staticData.pathingData.baseUrl + "/blogs"} active={currentPage === staticData.pathingData.pageEnum.blogs}>Blogs</Nav.Link>
-                        <Nav.Link className={styles.headerNavLink} href={staticData.pathingData.baseUrl + "/projects"} active={currentPage === staticData.pathingData.pageEnum.projects}>Projects</Nav.Link>
-                        <Nav.Link className={styles.headerNavLink} href={staticData.pathingData.baseUrl + "/portfolios"} active={currentPage === staticData.pathingData.pageEnum.portfolios}>Portfolios</Nav.Link>
-                        {isAdmin && <Nav className="me-auto">
-                            <Nav.Link className={styles.headerNavLink} href={staticData.pathingData.baseUrl + "/edit"} active={currentPage === staticData.pathingData.pageEnum.homeEdit}>Edit Main Portfolio</Nav.Link>
-                         </Nav>}
-                        {isLogged && <Nav className="me-auto">
-                            <Nav.Link className={styles.headerNavLink} href={staticData.pathingData.baseUrl + "/blogs/edit"} active={currentPage === staticData.pathingData.pageEnum.blogEdit}>Create Blog</Nav.Link>
-                            <Nav.Link className={styles.headerNavLink} href={staticData.pathingData.baseUrl + "/projects/edit"} active={currentPage === staticData.pathingData.pageEnum.projectEdit}>Create Project</Nav.Link>
-                            <Nav.Link className={styles.headerNavLink} href={staticData.pathingData.baseUrl + "/portfolios/edit"} active={currentPage === staticData.pathingData.pageEnum.portfolioEdit}>Create Portfolio</Nav.Link>
-                        </Nav>}
-                    </Nav>
-                </Navbar.Collapse>
-                <Navbar.Text className={styles.headerText}>
-                    {isLogged && <a className={styles.headerText} onClick={() => auth.signOut()}>Signout</a>}
-                    {!isLogged && <a className={styles.headerText} href={staticData.pathingData.baseUrl + "/login"}>Login</a>}
-                </Navbar.Text>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            </Container>
-        </Navbar>
+        <nav className={styles.floatingNavigation} aria-label="Primary navigation">
+            <div className={styles.navigationLinks}>
+                {primaryLinks.map(link => (
+                    <a key={link.href} href={`${staticData.pathingData.baseUrl}${link.href}`} className={linkClassName(link.page)}>
+                        {link.label}
+                    </a>
+                ))}
+            </div>
+            <div className={styles.navigationAccount}>
+                {(isAdmin || isLogged) && <details className={styles.navigationMenu}>
+                    <summary>Manage</summary>
+                    <div className={styles.navigationMenuPanel}>
+                        {isAdmin && <a href={`${staticData.pathingData.baseUrl}/edit`}>Edit portfolio</a>}
+                        {isLogged && <>
+                            <a href={`${staticData.pathingData.baseUrl}/projects/edit`}>New project</a>
+                            <a href={`${staticData.pathingData.baseUrl}/experiences/edit`}>New experience</a>
+                            <a href={`${staticData.pathingData.baseUrl}/blogs/edit`}>New post</a>
+                        </>}
+                    </div>
+                </details>}
+                {isLogged
+                    ? <button type="button" className={styles.navigationAccountButton} onClick={() => auth.signOut()}>Sign out</button>
+                    : <a className={styles.navigationAccountButton} href={`${staticData.pathingData.baseUrl}/login`}>Sign in</a>}
+            </div>
+        </nav>
     );
 }

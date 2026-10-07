@@ -1,23 +1,37 @@
-import { Col, Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import styles from "../../styles/Home.module.css";
 import Parser from "html-react-parser";
 const staticData = require("../../staticData.json")
 
 export default function Footer(){
+    const { websiteData } = staticData;
+
     return(
         <footer className={styles.footer}>
-            <Container>
-                <div className={styles.footerRow}>
-                    <Row className={styles.footerText}><h4>Contact Me</h4></Row>
-                    <Row className={styles.footerText}><div>Phone Number: <a href={"tel:" + staticData.websiteData.contactNo}>{staticData.websiteData.contactNo}</a></div></Row>
-                    <Row className={styles.footerText}><div>Email: <a href={"mailto:" + staticData.websiteData.email.address}>{staticData.websiteData.email.title}</a></div></Row>
-                    <Row className={styles.footerText}><div>Github: <a href={staticData.websiteData.github.url}>{staticData.websiteData.github.title}</a></div></Row>
-                    <Row className={styles.footerText}><div>Twitter: <a href={staticData.websiteData.twitter.url}>{staticData.websiteData.twitter.title}</a></div></Row>
-                    <Row className={styles.footerText}><div>Instagram: <a href={staticData.websiteData.instagram.url}>{staticData.websiteData.instagram.title}</a></div></Row>
+            <Container className={styles.footerContainer}>
+                <div className={styles.footerTop}>
+                    <section className={styles.footerIntroduction}>
+                        <p className={styles.footerEyebrow}>Let&apos;s work together</p>
+                        <h2>Have an idea worth building?</h2>
+                        <p>Get in touch to discuss products, platforms, and thoughtful digital experiences.</p>
+                        <a className={styles.footerCta} href={`mailto:${websiteData.email.address}`}>Start a conversation</a>
+                    </section>
+                    <section className={styles.footerLinks}>
+                        <h3>Contact</h3>
+                        <a href={`mailto:${websiteData.email.address}`}>{websiteData.email.title}</a>
+                        <a href={`tel:${websiteData.contactNo}`}>{websiteData.contactNo}</a>
+                    </section>
+                    <section className={styles.footerLinks}>
+                        <h3>Elsewhere</h3>
+                        <a href={websiteData.github.url} target="_blank" rel="noreferrer">{websiteData.github.title}</a>
+                        <a href={websiteData.twitter.url} target="_blank" rel="noreferrer">{websiteData.twitter.title}</a>
+                        <a href={websiteData.instagram.url} target="_blank" rel="noreferrer">{websiteData.instagram.title}</a>
+                    </section>
                 </div>
-                <Row className={styles.footerRow}>
-                    <h6 className={styles.footerText}>{Parser(staticData.websiteData.credits)}</h6>
-                </Row>
+                <div className={styles.footerBottom}>
+                    <span>© {new Date().getFullYear()} {websiteData.title}</span>
+                    <span>{Parser(websiteData.credits)}</span>
+                </div>
             </Container>
         </footer>
     )

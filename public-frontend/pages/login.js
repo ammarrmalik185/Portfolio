@@ -3,7 +3,6 @@ import {useRouter} from "next/router";
 import {auth} from "../services/firebaseService"
 import {useState} from "react";
 import {Alert} from 'react-bootstrap';
-import staticData from "../staticData.json";
 
 export default function LoginPage() {
     const Router = useRouter();
@@ -40,8 +39,6 @@ export default function LoginPage() {
                 })
             }}>Login
             </button>
-            <div className={styles.loginFormText}>Dont have an account? <a
-                href={staticData.pathingData.baseUrl + "/signup"}>Signup here</a></div>
         </form>
     )
 }

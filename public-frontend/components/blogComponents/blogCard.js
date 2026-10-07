@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {firestore} from "../../services/firebaseService";
 import staticData from "../../staticData.json";
 
-function BlogCard ({ title, author, image, id }) {
+function BlogCard ({ title, author, image, id, blog = {} }) {
     const Router = useRouter();
     const [authorName, setAuthorName] = useState("");
     const [init, setInit] = useState(false);
@@ -24,7 +24,7 @@ function BlogCard ({ title, author, image, id }) {
     return (
         <div className={styles.authorContainer}>
             <div className="rounded-lg px-6 pt-4" >
-                <img className="rounded-lg" src={image || staticData.defaults.blogPicture} alt="Sunset in the mountains"  height="150" width="300"/></div>
+                <img className="rounded-lg" src={blog.image || image || staticData.defaults.blogPicture} alt="Blog cover"  height="150" width="300"/></div>
             <div className="px-6 pt-2">
                 <div>
                     <text className={styles.authorHeader}>
@@ -34,6 +34,8 @@ function BlogCard ({ title, author, image, id }) {
                 <p className={styles.cardSubText}>
                     {"By: " + authorName}
                 </p>
+                {blog.category && <p className={styles.articleMeta}>{blog.category}{blog.readingTime && ` · ${blog.readingTime}`}</p>}
+                {blog.summary && <p className={styles.showcaseSummary}>{blog.summary}</p>}
             </div>
 
             <div className="px-6 pt-4 pb-2 flex space-between">

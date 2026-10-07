@@ -20,17 +20,16 @@
       "projects": 5,
       "projectEdit": 6,
       "projectSingle": 7,
-      "portfolios": 8,
-      "portfolioEdit": 9,
-      "portfolioSingle": 10,
-      "login": 11,
-      "signup": 12,
-      "notFound": 13
+      "login": 8,
+      "signup": 9,
+      "notFound": 10,
+      "experiences": 11,
+      "experienceEdit": 12,
+      "experienceSingle": 13
     }
   },
   "websiteData": {
     "title": "Ammar's Portfolio",
-    "description": "a portfolio, blog and project listing website",
     "credits": "Made by <a href='https://ammarrmalik185.github.io/Portfolio'>Ammar Malik</a>",
     "contactNo": "03349564896",
     "email": {

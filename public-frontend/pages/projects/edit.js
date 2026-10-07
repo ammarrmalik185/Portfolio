@@ -1,37 +1,69 @@
 import styles from '../../styles/Home.module.css'
 import { useRouter } from "next/router";
 import { auth, firestore } from "../../services/firebaseService";
-import ContentEditor from "../../components/contentTemplate/contentEditor";
+import ProjectEditor from "../../components/projectComponents/projectEditor";
+import EditorPageLoading from "../../components/basicComponents/EditorPageLoading";
 import {addDefaultData} from "../../services/defaultDocumentDataAdder";
 import {useEffect, useState} from "react";
 import staticData from "../../staticData.json";
 
 export default function Editor(){
     const router = useRouter();
-    const [init, setInit] = useState(false)
+    const [initialData, setInitialData] = useState(null);
+    const entryId = router.query.id;
+
     useEffect(() => {
-        if(init) return;
-        auth.onAuthStateChanged(user => {
-            if(user == null){
-                router.push({
-                    pathname: "/projects",
-                }).then(console.log).catch(console.error)
+        if (!router.isReady) return;
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if (!user) {
+                router.push("/projects");
+                return;
             }
-        })
-        setInit(true);
-    })
+
+            if (!entryId) {
+                setInitialData({ content: { blocks: [] } });
+                return;
+            }
+
+            firestore.collection("projects").doc(entryId).get().then(snapshot => {
+                if (!snapshot.exists) {
+                    router.replace("/projects");
+                    return;
+                }
+
+                const project = snapshot.data();
+                const isAdmin = staticData.adminData.adminIds.includes(user.uid);
+                if (project.user !== user.uid && !isAdmin) {
+                    router.replace("/projects");
+                    return;
+                }
+
+                setInitialData(project);
+            });
+        });
+
+        return unsubscribe;
+    }, [router, router.isReady, entryId]);
     return(
         <div className={styles.editorPage} >
-            <h1 className={styles.title}>Publish your Project</h1>
-            <ContentEditor prompts={{title: "Project", saveButton:"Save"}} onSave={(uploadData) => {
-                uploadData = addDefaultData(uploadData);
-                firestore.collection("projects").add(uploadData).then((savedData) => {
-                    router.push({
-                        pathname: "/projects/post",
-                        query:{id: savedData.id}
-                    }).then(console.log).catch(console.error)
-                })}
-            }/>
+            {initialData && <ProjectEditor
+                initialData={initialData}
+                saveLabel={entryId ? "Save project" : "Publish project"}
+                onSave={entry => {
+                    const project = entryId
+                        ? { ...initialData, ...entry, updatedAt: Date.now() }
+                        : addDefaultData(entry);
+                    const save = entryId
+                        ? firestore.collection("projects").doc(entryId).set(project)
+                        : firestore.collection("projects").add(project);
+
+                    return save.then(savedData => {
+                        const id = entryId || savedData.id;
+                        return router.push({ pathname: "/projects/post", query: { id } });
+                    });
+                }}
+            />}
+            {!initialData && <EditorPageLoading label="project editor" />}
         </div>
     )
 }

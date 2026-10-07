@@ -1,72 +1,80 @@
-import { firestore } from "../../services/firebaseService";
-import Image from 'next/image'
-import {useRouter} from "next/router";
-import styles from '../../styles/Home.module.css'
-import {VscSearch} from 'react-icons/vsc';
-import {useEffect, useState} from "react";
-import CustomHtmlViewer from "../../components/customHtmlTemplate/customHtmlViewer";
-import {LatestProjects} from "../../components/projectComponents/latestProjects";
-import AuthorDetails from "../../components/globalComponents/AuthorDetails";
-import PopularTags from "../../components/globalComponents/PopularTags";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
+import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, firestore } from "../../services/firebaseService";
+import styles from "../../styles/Home.module.css";
+import staticData from "../../staticData.json";
+import EntryManagementActions from "../../components/basicComponents/EntryManagementActions";
 
-export default function Blogpost() {
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState([])
-    const [tags, setTags] = useState([]);
-    const [author, setAuthor] = useState();
-    const [isInit, setIsInit] = useState(false);
-    const Router = useRouter();
+const CustomHtmlViewer = dynamic(
+    () => import("../../components/customHtmlTemplate/customHtmlViewer"),
+    { ssr: false }
+);
+
+export default function ProjectPost() {
+    const router = useRouter();
+    const [project, setProject] = useState(null);
+    const [user] = useAuthState(auth);
+
     useEffect(() => {
-        if(!isInit){
-            if (Router.query.id) {
-                if(isInit) return;
-                firestore.collection("projects").doc(Router.query.id).get().then(snapshot => {
-                    if (snapshot.exists) {
-                        let data = snapshot.data();
-                        setTitle(data.title);
-                        setContent(data.content.blocks);
-                        setAuthor(data.user)
-                        setTags(data.tags.split(" ").filter(v => v.trim() !== ""))
-                    } else {
-                        Router.push("/projects").then(console.log).catch(console.error);
-                    }
-                })
-                setIsInit(true);
-            } else {
-                Router.push("/projects").then(console.log).catch(console.error);
+        if (!router.query.id) return;
+        let isMounted = true;
+
+        firestore.collection("projects").doc(router.query.id).get().then(snapshot => {
+            if (!snapshot.exists) {
+                router.replace("/projects");
+            } else if (isMounted) {
+                setProject({ ...snapshot.data(), id: snapshot.id });
             }
-        }
-    })
+        });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [router, router.query.id]);
+
+    if (!project) return null;
+
+    const metadata = project.project || {};
+    const skills = Array.isArray(metadata.skills)
+        ? metadata.skills
+        : typeof project.tags === "string" ? project.tags.split(/[,\s]+/).filter(Boolean) : [];
+    const image = metadata.image || project.image || staticData.defaults.projectPicture;
+    const canManage = user && (user.uid === project.user || staticData.adminData.adminIds.includes(user.uid));
 
     return (
-        <div className={styles.container}>
-            <main>
-                <section>
-                    <h1 className={styles.title}>
-                        {title}
-                    </h1>
-                </section>
-                <section className='flex mt-3 w-full space-x-4'>
-
-                    <div className='w-full lg:w-2/3 px-4 py-4 leading-6 '>
-                        <CustomHtmlViewer
-                            contentBlocks={content}
-                        />
-
-                        <LatestProjects/>
-
+        <div className={styles.portfolioPage}>
+            <main className={styles.portfolioShell}>
+                <article className={styles.projectPost}>
+                    <div className={styles.projectPostCopy}>
+                        <p className={styles.portfolioEyebrow}>Project</p>
+                        <h1>{project.title}</h1>
+                        {metadata.summary && <p className={styles.projectSummary}>{metadata.summary}</p>}
+                        {skills.length > 0 && <div className={styles.showcaseTags}>
+                            {skills.map(skill => <span key={skill}>{skill}</span>)}
+                        </div>}
+                        <div className={styles.projectLinks}>
+                            {metadata.liveUrl && <a className={styles.portfolioPrimaryAction} href={metadata.liveUrl} target="_blank" rel="noreferrer">Visit project <FaExternalLinkAlt aria-hidden="true" /></a>}
+                            {metadata.repositoryUrl && <a className={styles.portfolioSecondaryAction} href={metadata.repositoryUrl} target="_blank" rel="noreferrer"><FaGithub aria-hidden="true" /> View repository</a>}
+                        </div>
+                        {canManage && <EntryManagementActions
+                            editHref={{ pathname: "/projects/edit", query: { id: project.id } }}
+                            editLabel="Edit project"
+                            deleteLabel="project"
+                            onDelete={() => firestore.collection("projects").doc(project.id).delete().then(() => router.replace("/projects"))}
+                        />}
                     </div>
-
-
-                    <div className='w-1/3 px-4 py-4 space-y-12'>
-
-                        {author && <AuthorDetails userId={author}/>}
-
-                        {tags.length > 0 && <PopularTags tags={tags}/>}
-
-                    </div>
-                </section>
+                    {/* Project images are author-managed external URLs. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img className={styles.projectPostImage} src={image} alt={`${project.title} preview`} />
+                </article>
+                {metadata.showDetails !== false && <section className={styles.projectDetails}>
+                    <p className={styles.portfolioEyebrow}>Case study</p>
+                    <CustomHtmlViewer contentBlocks={project.content?.blocks || []} />
+                </section>}
             </main>
         </div>
-    )
+    );
 }

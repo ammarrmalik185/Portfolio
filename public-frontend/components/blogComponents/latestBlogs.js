@@ -1,34 +1,36 @@
 import styles from "../../styles/Home.module.css";
-import BlogCard from "./blogCard";
+import ModernBlogCard from "./ModernBlogCard";
 import {useEffect, useState} from "react";
 import {firestore} from "../../services/firebaseService";
 
 
-export function LatestBlogs(){
+export function LatestBlogs({ excludeId }){
     const [blogs, setBlogs] = useState([]);
-    const [isInit, setIsInit] = useState(false);
     useEffect(() => {
-        if(!isInit) {
-            firestore.collection("blogs").limit(3).get().then((querySnapshot) => {
-                let newBlogs = [];
-                querySnapshot.forEach((doc) => {
-                    newBlogs.push({...doc.data(), id: doc.id})
-                });
-                setBlogs(newBlogs)
-            });
-            setIsInit(true);
-        }
-    }, [])
-    return(<div>
-        {blogs && <div>
-            <div>
-                <p className={styles.title}>
-                    Latest Blogs
-                </p>
-            </div>
-            <div className='grid grid-cols-3 gap-4'>
-                {blogs.map(blog=> <BlogCard key={blog.id} title={blog.title} author={blog.user} image={blog.image} id={blog.id}/>)}
-            </div>
-        </div>}
-    </div>);
+        let isMounted = true;
+        firestore.collection("blogs").orderBy("date", "desc").limit(4).get().then(snapshot => {
+            if (isMounted) {
+                setBlogs(snapshot.docs
+                    .map(doc => ({ ...doc.data(), id: doc.id }))
+                    .filter(blog => blog.id !== excludeId)
+                    .slice(0, 3));
+            }
+        });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [excludeId]);
+
+    if (blogs.length === 0) return null;
+
+    return(<section className={styles.relatedArticles}>
+        <div className={styles.relatedArticlesHeading}>
+            <p className={styles.portfolioEyebrow}>Keep reading</p>
+            <h2>More articles</h2>
+        </div>
+        <div className={styles.blogGrid}>
+            {blogs.map(blog => <ModernBlogCard key={blog.id} blog={blog} />)}
+        </div>
+    </section>);
 }

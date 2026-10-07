@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }) {
   return <div>
     <Head>
       <title>{staticData.websiteData.title}</title>
-      <meta name="description" content={staticData.websiteData.description} />
+      {staticData.websiteData.description && <meta name="description" content={staticData.websiteData.description} />}
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <Header/>

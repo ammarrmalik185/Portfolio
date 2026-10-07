@@ -10,11 +10,40 @@ export default function ContentEditor({ prompts, onSave, isUpdate, updateData })
     const[data, setData] = useState([]);
     const[title, setTitle] = useState("")
     const[tags, setTags] = useState("")
+    const[isSaving, setIsSaving] = useState(false);
+    const[saveError, setSaveError] = useState("");
 
     if(isUpdate){
         setData(updateData)
     }
     let editor = null;
+
+    const saveContent = async () => {
+        if (isSaving) return;
+        if (!editor) {
+            setSaveError("The editor is still loading. Please try again in a moment.");
+            return;
+        }
+
+        setIsSaving(true);
+        setSaveError("");
+        try {
+            const content = await editor.save();
+            const clarifiedData = clarifyContent(content.blocks);
+            const dataFormatted = {
+                title: document.getElementById('title').value,
+                tags: document.getElementById('tags').value,
+                content: {...content, blocks: clarifiedData}
+            };
+            await onSave(dataFormatted);
+        } catch (error) {
+            console.error("Unable to save content", error);
+            setSaveError("We could not save this entry. Please check your connection and try again.");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
     return(
         <div className={styles.editorPage} >
 
@@ -25,8 +54,8 @@ export default function ContentEditor({ prompts, onSave, isUpdate, updateData })
                         <InputField type="text" id="title" placeholder={"Enter " + prompts.title + " Title"} value={title} onChange={setTitle}/>
                     </div>
                     <div className="mb-3 xl:w-96 mr-3">
-                        <label htmlFor="title" className={styles.formLabel}>Tags</label>
-                        <InputField type="text" id="tags" placeholder={"Enter " + prompts.title + " Tags"} value={tags} onChange={setTags}/>
+                        <label htmlFor="tags" className={styles.formLabel}>{prompts.tagsLabel || "Tags"}</label>
+                        <InputField type="text" id="tags" placeholder={prompts.tagsPlaceholder || "Enter " + prompts.title + " Tags"} value={tags} onChange={setTags}/>
                     </div>
                 </div>
             </div>
@@ -48,19 +77,7 @@ export default function ContentEditor({ prompts, onSave, isUpdate, updateData })
 
             </div>
             <div className='flex flex-1 justify-center space-x-2 pb-10'>
-                <GreenButton title={prompts.saveButton} onClick={() => {
-                    editor.save().then(data => {
-                        let clarifiedData = clarifyContent(data.blocks);
-                        let dataFormatted = {
-                            title: document.getElementById('title').value,
-                            tags: document.getElementById('tags').value,
-                            content: {...data, blocks: clarifiedData}
-                        }
-                        console.log(dataFormatted)
-                        onSave(dataFormatted);
-                    })
-
-                }}/>
+                <GreenButton title={isSaving ? "Saving..." : prompts.saveButton} onClick={saveContent} disabled={isSaving}/>
                 <BlueButton title="Show Preview" onClick={() => {
                     editor.save().then(data => {
                         setData({...data, blocks: clarifyContent(data.blocks)})
@@ -68,6 +85,7 @@ export default function ContentEditor({ prompts, onSave, isUpdate, updateData })
                     })
                 }} />
             </div>
+            {saveError && <p className={styles.editorSaveError} role="alert">{saveError}</p>}
 
         </div>
     )

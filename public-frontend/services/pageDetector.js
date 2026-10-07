@@ -6,13 +6,13 @@ export function detectPage(pathname) {
     if (pathname.split("?")[0].endsWith("/blogs/edit")) return pagesData.blogEdit;
     if (pathname.split("?")[0].endsWith("/blogs/post")) return pagesData.blogSingle;
 
-    if (pathname.split("?")[0].endsWith("/portfolios")) return pagesData.portfolios;
-    if (pathname.split("?")[0].endsWith("/portfolios/edit")) return pagesData.portfolioEdit;
-    if (pathname.split("?")[0].endsWith("/portfolios/post")) return pagesData.portfolioSingle;
-
     if (pathname.split("?")[0].endsWith("/projects")) return pagesData.projects;
     if (pathname.split("?")[0].endsWith("/projects/edit")) return pagesData.projectEdit;
     if (pathname.split("?")[0].endsWith("/projects/post")) return pagesData.projectSingle;
+
+    if (pathname.split("?")[0].endsWith("/experiences")) return pagesData.experiences;
+    if (pathname.split("?")[0].endsWith("/experiences/edit")) return pagesData.experienceEdit;
+    if (pathname.split("?")[0].endsWith("/experiences/post")) return pagesData.experienceSingle;
 
     if (pathname.split("?")[0].endsWith("/login")) return pagesData.login;
     if (pathname.split("?")[0].endsWith("/signup")) return pagesData.signup;

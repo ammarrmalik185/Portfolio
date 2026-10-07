@@ -1,7 +1,8 @@
 import styles from '../styles/Home.module.css'
 import { useRouter } from "next/router";
 import {auth, firestore} from "../services/firebaseService"
-import ContentEditor from "../components/contentTemplate/contentEditor";
+import PortfolioEditor from "../components/portfolioComponents/portfolioEditor";
+import EditorPageLoading from "../components/basicComponents/EditorPageLoading";
 import { addDefaultData } from "../services/defaultDocumentDataAdder";
 import {useEffect, useState} from "react";
 const staticData = require("../staticData.json");
@@ -9,12 +10,10 @@ const staticData = require("../staticData.json");
 export default function Editor(){
     const router = useRouter();
 
-    const [init, setInit] = useState(false)
-    const [data, setData] = useState({blocks: null});
+    const [data, setData] = useState(null);
 
     useEffect(() => {
-        if(init) return;
-        auth.onAuthStateChanged(user => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
             if(user == null || !staticData.adminData.adminIds.includes(user.uid)){
                 router.push({
                     pathname: "/",
@@ -23,29 +22,27 @@ export default function Editor(){
         })
         firestore.collection("portfolios").doc(staticData.adminData.mainPortfolioId).get().then((snapShot) => {
             if(snapShot.exists){
-                setData(snapShot.data().content);
+                setData(snapShot.data());
             }else{
-                setData({blocks: []});
+                setData({ content: { blocks: [] } });
             }
-        })
-        setInit(true);
-    })
+        });
+
+        return unsubscribe;
+    }, [router]);
 
     return(
         <div className={styles.editorPage} >
-            <h1 className={styles.title}>Edit Your Portfolio</h1>
-            <ContentEditor
-                isUpdate = {false}
-                updateData = {data}
-                prompts={
-                    {title: "Portfolio", saveButton: "Save"}
-                }
-                onSave={(uploadData) => {
-                    uploadData = addDefaultData(uploadData);
-                    firestore.collection("portfolios").doc(staticData.adminData.mainPortfolioId).set(uploadData).then(() => {
-                        router.push(staticData.pathingData.baseUrl).then(console.log).catch(console.error)
-                    })
-            }}/>
+            {data && <PortfolioEditor
+                initialData={data}
+                onSave={(portfolio) => {
+                    const uploadData = addDefaultData(portfolio);
+                    return firestore.collection("portfolios").doc(staticData.adminData.mainPortfolioId).set(uploadData).then(() => {
+                        return router.push("/");
+                    });
+                }}
+            />}
+            {!data && <EditorPageLoading label="portfolio editor" />}
         </div>
     )
 }
