@@ -16,7 +16,7 @@ function initialValues(data, metadataKey, fields) {
     return fields.reduce((values, field) => {
         const fallbackValue = field.key === "tags" || field.key === "image" ? data[field.key] : undefined;
         const value = field.key === "title" ? data.title : metadata[field.key] || fallbackValue;
-        values[field.key] = Array.isArray(value) ? value.join(", ") : value || "";
+        values[field.key] = Array.isArray(value) ? value.join(", ") : value || field.defaultValue || "";
         return values;
     }, {});
 }
@@ -27,6 +27,8 @@ export default function EntryEditor({ initialData, metadataKey, fields, heading,
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState("");
     const editorRef = useRef(null);
+    const visibleFields = fields.filter(field => !field.visibleWhen || field.visibleWhen(values));
+    const fieldValue = value => typeof value === "function" ? value(values) : value;
 
     const updateValue = (key, value) => {
         setValues(currentValues => ({ ...currentValues, [key]: value }));
@@ -49,7 +51,7 @@ export default function EntryEditor({ initialData, metadataKey, fields, heading,
             const editorData = showDetails
                 ? await editorRef.current.save()
                 : initialData.content || { blocks: [] };
-            const metadata = fields.reduce((result, field) => {
+            const metadata = visibleFields.reduce((result, field) => {
                 if (field.key === "title") return result;
                 result[field.key] = field.isList
                     ? values[field.key].split(",").map(value => value.trim()).filter(Boolean)
@@ -80,13 +82,17 @@ export default function EntryEditor({ initialData, metadataKey, fields, heading,
                 <p>{description}</p>
             </section>
             <section className={styles.portfolioFields}>
-                {fields.map(field => field.isImage
-                    ? <ImageUploadField key={field.key} label={field.label} value={values[field.key]} onChange={value => updateValue(field.key, value)} placeholder={field.placeholder} />
+                {visibleFields.map(field => field.isImage
+                    ? <ImageUploadField key={field.key} label={fieldValue(field.label)} value={values[field.key]} onChange={value => updateValue(field.key, value)} placeholder={fieldValue(field.placeholder)} />
                     : <label key={field.key} className={field.wide ? styles.portfolioFieldWide : ""}>
-                        {field.label}
-                        {field.multiline
-                            ? <textarea value={values[field.key]} onChange={event => updateValue(field.key, event.target.value)} placeholder={field.placeholder} rows={field.rows || 4} />
-                            : <input type={field.type || "text"} value={values[field.key]} onChange={event => updateValue(field.key, event.target.value)} placeholder={field.placeholder} />}
+                        {fieldValue(field.label)}
+                        {field.options
+                            ? <select value={values[field.key]} onChange={event => updateValue(field.key, event.target.value)}>
+                                {field.options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+                            </select>
+                            : field.multiline
+                                ? <textarea value={values[field.key]} onChange={event => updateValue(field.key, event.target.value)} placeholder={fieldValue(field.placeholder)} rows={field.rows || 4} />
+                                : <input type={field.type || "text"} value={values[field.key]} onChange={event => updateValue(field.key, event.target.value)} placeholder={fieldValue(field.placeholder)} />}
                     </label>)}
             </section>
             <section className={styles.portfolioEditorContent}>

@@ -3,7 +3,7 @@ import {useRouter} from "next/router";
 import styles from '../../styles/Home.module.css'
 import {useEffect, useState} from "react";
 import {firestore} from "../../services/firebaseService";
-import staticData from "../../staticData.json";
+import FallbackImage from "../basicComponents/FallbackImage";
 
 function ProjectCard ({ title, author, image, id }) {
     const Router = useRouter();
@@ -23,7 +23,7 @@ function ProjectCard ({ title, author, image, id }) {
     return (
         <div className={styles.projectCard}>
             <div className="rounded-lg px-6 pt-4" >
-                <img className={styles.projectCardImage} src={image || staticData.defaults.blogPicture} alt="Sunset in the mountains"/></div>
+                <FallbackImage className={styles.projectCardImage} src={image} kind="project" alt={`${title || "Project"} preview`} /></div>
             <div className={styles.projectCardContent}>
                 <div>
                     <text className={styles.authorHeader}>

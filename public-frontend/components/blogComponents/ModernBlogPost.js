@@ -8,6 +8,7 @@ import { LatestBlogs } from "./latestBlogs";
 import EntryManagementActions from "../basicComponents/EntryManagementActions";
 import styles from "../../styles/Home.module.css";
 import staticData from "../../staticData.json";
+import FallbackImage from "../basicComponents/FallbackImage";
 
 export default function ModernBlogPost() {
     const router = useRouter();
@@ -57,7 +58,6 @@ export default function ModernBlogPost() {
         : typeof article.tags === "string"
             ? article.tags.split(/[\s,]+/).filter(Boolean)
             : [];
-    const image = metadata.image || article.image || staticData.defaults.blogPicture;
     const canManage = currentUser && (currentUser.uid === article.user || staticData.adminData.adminIds.includes(currentUser.uid));
 
     return (
@@ -81,9 +81,7 @@ export default function ModernBlogPost() {
                             onDelete={() => firestore.collection("blogs").doc(article.id).delete().then(() => router.replace("/blogs"))}
                         />}
                     </header>
-                    {/* Blog cover images can be externally hosted or stored as Firestore data URLs. */}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img className={styles.blogArticleCover} src={image} alt="" />
+                    <FallbackImage className={styles.blogArticleCover} src={metadata.image} legacySrc={article.image} kind="blog" />
                     {metadata.showDetails !== false && <div className={styles.blogArticleBody}>
                         <CustomHtmlViewer contentBlocks={article.content?.blocks || []} />
                     </div>}

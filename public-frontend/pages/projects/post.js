@@ -7,6 +7,7 @@ import { auth, firestore } from "../../services/firebaseService";
 import styles from "../../styles/Home.module.css";
 import staticData from "../../staticData.json";
 import EntryManagementActions from "../../components/basicComponents/EntryManagementActions";
+import FallbackImage from "../../components/basicComponents/FallbackImage";
 
 const CustomHtmlViewer = dynamic(
     () => import("../../components/customHtmlTemplate/customHtmlViewer"),
@@ -41,7 +42,6 @@ export default function ProjectPost() {
     const skills = Array.isArray(metadata.skills)
         ? metadata.skills
         : typeof project.tags === "string" ? project.tags.split(/[,\s]+/).filter(Boolean) : [];
-    const image = metadata.image || project.image || staticData.defaults.projectPicture;
     const canManage = user && (user.uid === project.user || staticData.adminData.adminIds.includes(user.uid));
 
     return (
@@ -66,9 +66,7 @@ export default function ProjectPost() {
                             onDelete={() => firestore.collection("projects").doc(project.id).delete().then(() => router.replace("/projects"))}
                         />}
                     </div>
-                    {/* Project images are author-managed external URLs. */}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img className={styles.projectPostImage} src={image} alt={`${project.title} preview`} />
+                    <FallbackImage className={styles.projectPostImage} src={metadata.image} legacySrc={project.image} kind="project" alt={`${project.title} preview`} />
                 </article>
                 {metadata.showDetails !== false && <section className={styles.projectDetails}>
                     <p className={styles.portfolioEyebrow}>Case study</p>

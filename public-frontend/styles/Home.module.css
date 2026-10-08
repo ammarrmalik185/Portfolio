@@ -308,6 +308,318 @@
   gap: 1.25rem;
 }
 
+.projectOrderItem {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.projectFilters {
+  margin-bottom: 1.5rem;
+}
+
+.showcaseGrid,
+.experienceList,
+.blogGrid {
+  scroll-margin-top: 6rem;
+}
+
+.collectionPagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.paginationSummary {
+  margin: 0;
+  color: var(--textSecondary);
+  font-size: 0.9rem;
+}
+
+.paginationControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.paginationControls button {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(169, 221, 255, 0.25);
+  border-radius: 0.6rem;
+  color: #a9ddff;
+  background: rgba(255, 255, 255, 0.04);
+  font: inherit;
+}
+
+.paginationControls button:hover:not(:disabled),
+.paginationControls .paginationCurrentPage {
+  border-color: rgba(169, 221, 255, 0.7);
+  color: var(--text);
+  background: rgba(169, 221, 255, 0.16);
+}
+
+.paginationControls button:focus-visible {
+  outline: 2px solid #a9ddff;
+  outline-offset: 3px;
+}
+
+.paginationControls button:disabled {
+  opacity: 0.5;
+}
+
+.paginationEllipsis {
+  padding: 0 0.3rem;
+  color: var(--textSecondary);
+}
+
+.projectSearch {
+  position: relative;
+}
+
+.projectSearchLabel {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.projectSearchBox {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.75rem;
+  border: 1px solid rgba(169, 221, 255, 0.3);
+  border-radius: 0.85rem;
+  background: var(--primary);
+}
+
+.projectSearchBox:focus-within {
+  border-color: #a9ddff;
+  box-shadow: 0 0 0 3px rgba(169, 221, 255, 0.1);
+}
+
+.projectSearchInputRow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: #a9ddff;
+}
+
+.projectSearchInputRow > svg {
+  flex-shrink: 0;
+}
+
+.projectSearchInputRow input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.4rem 0;
+  border: 0;
+  outline: none;
+  color: var(--text);
+  background: transparent;
+  font: inherit;
+}
+
+.projectSearchInputRow input::placeholder {
+  color: var(--textSecondary);
+}
+
+.projectSearchClear {
+  flex-shrink: 0;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.55rem;
+  border: 0;
+  border-radius: 0.5rem;
+  color: #a9ddff;
+  background: transparent;
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.projectSearchClear:hover:not(:disabled) {
+  background: rgba(169, 221, 255, 0.1);
+}
+
+.projectSearchClear:focus-visible {
+  outline: 2px solid #a9ddff;
+}
+
+.projectSearchInputRow input:disabled,
+.projectSearchClear:disabled {
+  opacity: 0.5;
+}
+
+.projectSearchSuggestions {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  margin-top: 0.4rem;
+  padding: 0.6rem;
+  border: 1px solid rgba(169, 221, 255, 0.35);
+  border-radius: 0.85rem;
+  background: var(--primary);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.3);
+}
+
+.projectSearchSuggestions > p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.75rem;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0.3rem 0.6rem 0.6rem;
+  color: #a9ddff;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.projectSearchSuggestions > p > span {
+  color: var(--textSecondary);
+  font-weight: 400;
+}
+
+.projectSearchSuggestions [role="listbox"] {
+  max-height: 18rem;
+  overflow-y: auto;
+}
+
+.projectSearchSuggestions button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.6rem;
+  border: 0;
+  border-radius: 0.5rem;
+  color: var(--text);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.projectSearchSuggestions button:hover,
+.projectSearchSuggestions .projectSearchSuggestionActive {
+  background: rgba(169, 221, 255, 0.12);
+}
+
+.projectSearchHint {
+  margin: 0.65rem 0 0;
+  color: var(--textSecondary);
+  font-size: 0.85rem;
+}
+
+.projectFilterTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.projectFilterTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  max-width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid rgba(169, 221, 255, 0.25);
+  border-radius: 999px;
+  color: #a9ddff;
+  background: rgba(255, 255, 255, 0.04);
+  font: inherit;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.projectFilterTag:hover:not(:disabled),
+.projectFilterTagActive {
+  border-color: rgba(169, 221, 255, 0.7);
+  color: var(--text);
+  background: rgba(169, 221, 255, 0.16);
+}
+
+.projectFilterTag:focus-visible {
+  outline: 2px solid #a9ddff;
+  outline-offset: 3px;
+}
+
+.projectFilterTag:disabled {
+  opacity: 0.5;
+}
+
+.projectFilterCount {
+  flex-shrink: 0;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(169, 221, 255, 0.12);
+  font-size: 0.8rem;
+}
+
+.projectFilterSummary {
+  margin: 0.85rem 0 0;
+  color: var(--text);
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.projectOrderItem > article {
+  flex: 1;
+  min-height: 0;
+}
+
+.projectOrderToolbar,
+.projectOrderControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.projectOrderToolbar {
+  margin-bottom: 1.5rem;
+}
+
+.projectOrderToolbar p {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.projectOrderControls {
+  margin-top: 0.75rem;
+}
+
+.projectOrderToolbar button,
+.projectOrderControls button {
+  min-height: 2.75rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(169, 221, 255, 0.45);
+  border-radius: 0.6rem;
+  color: #a9ddff;
+  background: rgba(255, 255, 255, 0.06);
+  font: inherit;
+  font-weight: 700;
+}
+
+.projectOrderToolbar button:hover:not(:disabled),
+.projectOrderControls button:hover:not(:disabled) {
+  background: rgba(169, 221, 255, 0.12);
+}
+
+.projectOrderToolbar button:disabled,
+.projectOrderControls button:disabled {
+  opacity: 0.5;
+}
+
 .showcaseCard,
 .experienceCard {
   display: flex;
@@ -895,6 +1207,7 @@
 }
 
 .portfolioFields input,
+.portfolioFields select,
 .portfolioFields textarea {
   width: 100%;
   padding: 0.75rem 0.9rem;
@@ -908,6 +1221,7 @@
 }
 
 .portfolioFields input:focus,
+.portfolioFields select:focus,
 .portfolioFields textarea:focus {
   border-color: #76c4ff;
   box-shadow: 0 0 0 3px rgba(118, 196, 255, 0.16);

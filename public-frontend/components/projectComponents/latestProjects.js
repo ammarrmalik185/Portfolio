@@ -2,6 +2,7 @@ import styles from "../../styles/Home.module.css";
 import ProjectCard from "./projectCard";
 import {useEffect, useState} from "react";
 import {firestore} from "../../services/firebaseService";
+import {sortProjects} from "../../services/collectionOrdering";
 
 
 export function LatestProjects(){
@@ -9,12 +10,12 @@ export function LatestProjects(){
     const [isInit, setIsInit] = useState(false);
     useEffect(() => {
         if(!isInit) {
-            firestore.collection("projects").limit(3).get().then((querySnapshot) => {
+            firestore.collection("projects").get().then((querySnapshot) => {
                 let newProjects = [];
                 querySnapshot.forEach((doc) => {
                     newProjects.push({...doc.data(), id: doc.id})
                 });
-                setProjects(newProjects)
+                setProjects(sortProjects(newProjects).slice(0, 3))
             });
             setIsInit(true);
         }

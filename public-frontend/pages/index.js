@@ -1,9 +1,11 @@
 import styles from '../styles/Home.module.css'
 import { useEffect, useState } from "react";
 import { firestore } from "../services/firebaseService";
+import { sortProjects, sortExperiences } from "../services/collectionOrdering";
 import dynamic from "next/dynamic";
 import { FaArrowRight, FaEnvelope, FaGithub, FaLinkedinIn, FaMapMarkerAlt } from "react-icons/fa";
 import ShowcaseCard from "../components/portfolioComponents/showcaseCard";
+import ExperienceCard from "../components/experienceComponents/experienceCard";
 const staticData = require("../staticData.json");
 
 const CustomHtmlViewer = dynamic(
@@ -102,11 +104,11 @@ export default function Blogpost() {
     useEffect(() => {
         let isMounted = true;
 
-        const loadCollection = (collection, setItems) => {
-            firestore.collection(collection).orderBy("date", "desc").limit(6).get()
+        const loadCollection = (collection, setItems, sortItems) => {
+            firestore.collection(collection).get()
                 .then(snapshot => {
                     if (isMounted) {
-                        setItems(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+                        setItems(sortItems(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))).slice(0, 6));
                     }
                 })
                 .catch(() => {
@@ -114,8 +116,8 @@ export default function Blogpost() {
                 });
         };
 
-        loadCollection("projects", setProjects);
-        loadCollection("experiences", setExperiences);
+        loadCollection("projects", setProjects, sortProjects);
+        loadCollection("experiences", setExperiences, sortExperiences);
 
         return () => {
             isMounted = false;
@@ -200,13 +202,13 @@ export default function Blogpost() {
                         {experiences.length > 0 && <div className={styles.showcaseSection}>
                             <div className={styles.showcaseHeading}>
                                 <div>
-                                    <p className={styles.portfolioEyebrow}>Career journey</p>
+                                    <p className={styles.portfolioEyebrow}>Work and education</p>
                                     <h2>Experience</h2>
                                 </div>
                                 <a href={`${staticData.pathingData.baseUrl}/experiences`} className={styles.showcaseAllLink}>View all experience <FaArrowRight aria-hidden="true" /></a>
                             </div>
                             <div className={styles.showcaseGrid}>
-                                {experiences.map(experience => <ShowcaseCard key={experience.id} item={experience} type="Experience" href="/experiences/post" />)}
+                                {experiences.map(experience => <ExperienceCard key={experience.id} experience={experience} />)}
                             </div>
                         </div>}
                     </section>}

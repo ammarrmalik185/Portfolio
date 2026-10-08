@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
 import styles from "../../styles/Home.module.css";
-import staticData from "../../staticData.json";
+import FallbackImage from "../basicComponents/FallbackImage";
 
 export default function ModernBlogCard({ blog }) {
     const metadata = blog.blog || {};
@@ -10,13 +10,10 @@ export default function ModernBlogCard({ blog }) {
         : typeof blog.tags === "string"
             ? blog.tags.split(/[\s,]+/).filter(Boolean).slice(0, 3)
             : [];
-    const image = metadata.image || blog.image || staticData.defaults.blogPicture;
 
     return (
         <article className={styles.blogCard}>
-            {/* Blog cover images can be externally hosted or stored as Firestore data URLs. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className={styles.blogCardImage} src={image} alt="" />
+            <FallbackImage className={styles.blogCardImage} src={metadata.image} legacySrc={blog.image} kind="blog" />
             <div className={styles.blogCardContent}>
                 <p className={styles.blogCardMeta}>
                     {metadata.category || "Article"}{metadata.readingTime && <><span aria-hidden="true">·</span>{metadata.readingTime}</>}

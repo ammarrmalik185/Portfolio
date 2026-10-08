@@ -57,9 +57,9 @@
   },
   "defaults": {
     "profilePicture" : "https://firebasestorage.googleapis.com/v0/b/ammarportfolioweb.appspot.com/o/Defaults%2FprofilePicture.jpeg?alt=media&token=e8150f92-ea49-4569-84ab-1bf43a7c4957",
-    "blogPicture" : "https://firebasestorage.googleapis.com/v0/b/ammarportfolioweb.appspot.com/o/Defaults%2FblogPost.png?alt=media&token=08b8b6a7-4c98-4a19-ae5b-4f238539306f",
+    "blogPicture" : "/images/default-blog.svg",
     "portfolioPicture" : "https://firebasestorage.googleapis.com/v0/b/ammarportfolioweb.appspot.com/o/Defaults%2FportfolioPicture.webp?alt=media&token=3d85a73d-b617-4207-b507-f926a69aeb6a",
-    "projectPicture" : "https://firebasestorage.googleapis.com/v0/b/ammarportfolioweb.appspot.com/o/Defaults%2FblogPost.png?alt=media&token=08b8b6a7-4c98-4a19-ae5b-4f238539306f"
+    "projectPicture" : "/images/default-project.svg"
   },
   "editorConfig": {
     "tools": {

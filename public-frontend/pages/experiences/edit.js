@@ -51,19 +51,26 @@ export default function ExperienceEditor() {
                 initialData={initialData}
                 metadataKey="experience"
                 heading={entryId ? "Refine an experience" : "Add an experience"}
-                description="Make the timeline clear, then use Editor.js to explain your responsibilities and results."
+                description="Add work, university, or college experience. Use the dates to place it in your timeline, with the latest start date first."
                 saveLabel={entryId ? "Save experience" : "Publish experience"}
                 fields={[
-                    { key: "title", label: "Role", placeholder: "Senior software engineer", wide: true },
-                    { key: "company", label: "Company", placeholder: "Acme" },
-                    { key: "employmentType", label: "Employment type", placeholder: "Full-time" },
+                    { key: "type", label: "Experience type", defaultValue: "work", wide: true, options: [
+                        { value: "work", label: "Work" },
+                        { value: "university", label: "University" },
+                        { value: "college", label: "College" }
+                    ] },
+                    { key: "title", label: values => values.type === "work" ? "Role" : "Degree or qualification", placeholder: values => values.type === "work" ? "Senior software engineer" : "BS Computer Science or Higher Secondary Certificate", wide: true },
+                    { key: "company", label: "Company", placeholder: "Acme", visibleWhen: values => values.type === "work" },
+                    { key: "employmentType", label: "Employment type", placeholder: "Full-time", visibleWhen: values => values.type === "work" },
+                    { key: "institution", label: values => values.type === "university" ? "University name" : "College name", placeholder: "Institution name", visibleWhen: values => values.type !== "work" },
+                    { key: "fieldOfStudy", label: "Field of study", placeholder: "Computer Science", visibleWhen: values => values.type !== "work" },
                     { key: "location", label: "Location", placeholder: "Remote or city" },
                     { key: "startDate", label: "Start date", type: "month" },
                     { key: "endDate", label: "End date", type: "month", placeholder: "Leave empty for current" },
                     { key: "summary", label: "Short summary", placeholder: "The scope, contribution, and outcome.", wide: true, multiline: true },
                     { key: "skills", label: "Skills and tools", placeholder: "React, Firebase, Leadership", wide: true, isList: true }
                 ]}
-                makeTags={(values, metadata) => [metadata.company, values.startDate, values.endDate || "Present", ...metadata.skills].filter(Boolean).join(", ")}
+                makeTags={(values, metadata) => [metadata.institution || metadata.company, metadata.fieldOfStudy, values.startDate, values.endDate || "Present", ...metadata.skills].filter(Boolean).join(", ")}
                 onSave={entry => {
                     const experience = entryId
                         ? { ...initialData, ...entry, updatedAt: Date.now() }

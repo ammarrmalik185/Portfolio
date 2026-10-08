@@ -1,22 +1,16 @@
 import Link from "next/link";
 import styles from "../../styles/Home.module.css";
 import { FaArrowRight } from "react-icons/fa";
+import { getProjectTags } from "../../services/projectTags";
+import FallbackImage from "../basicComponents/FallbackImage";
 
 export default function ShowcaseCard({ item, type, href, fallbackImage }) {
     const metadata = item.project || {};
-    const tags = Array.isArray(metadata.skills)
-        ? metadata.skills.slice(0, 4)
-        : typeof item.tags === "string"
-            ? item.tags.split(/[,\s]+/).filter(Boolean).slice(0, 4)
-            : [];
+    const tags = getProjectTags(item).slice(0, 4);
 
     return (
         <article className={styles.showcaseCard}>
-            {fallbackImage && <>
-                {/* Project images are author-managed external URLs. */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className={styles.showcaseImage} src={metadata.image || item.image || fallbackImage} alt="" />
-            </>}
+            <FallbackImage className={styles.showcaseImage} src={metadata.image} legacySrc={item.image} fallbackSrc={fallbackImage} kind="project" />
             <div className={styles.showcaseCardContent}>
                 <p className={styles.showcaseType}>{type}</p>
                 <h3>{item.title || "Untitled"}</h3>

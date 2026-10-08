@@ -1,10 +1,9 @@
-import Image from "next/image";
 import {RiFlag2Line} from "react-icons/ri";
 import {useRouter} from "next/router";
 import styles from '../../styles/Home.module.css'
 import {useEffect, useState} from "react";
 import {firestore} from "../../services/firebaseService";
-import staticData from "../../staticData.json";
+import FallbackImage from "../basicComponents/FallbackImage";
 
 function BlogCard ({ title, author, image, id, blog = {} }) {
     const Router = useRouter();
@@ -24,7 +23,7 @@ function BlogCard ({ title, author, image, id, blog = {} }) {
     return (
         <div className={styles.authorContainer}>
             <div className="rounded-lg px-6 pt-4" >
-                <img className="rounded-lg" src={blog.image || image || staticData.defaults.blogPicture} alt="Blog cover"  height="150" width="300"/></div>
+                <FallbackImage className="rounded-lg" src={blog.image} legacySrc={image} kind="blog" alt="Blog cover" height="150" width="300" /></div>
             <div className="px-6 pt-2">
                 <div>
                     <text className={styles.authorHeader}>

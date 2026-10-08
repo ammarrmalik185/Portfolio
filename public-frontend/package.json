@@ -8,7 +8,8 @@
     "export": "next build && next export",
     "exportToHosting": "next export && next export -o ../firebase-backend/hosting",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "node --test services/collectionOrdering.test.mjs services/projectTags.test.mjs services/pagination.test.mjs"
   },
   "dependencies": {
     "@editorjs/code": "^2.8.0",
