@@ -1040,6 +1040,45 @@
   margin-top: 1.5rem;
 }
 
+.projectJsonDisclosure {
+  margin: 1.5rem 0;
+}
+
+.projectJsonToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(169, 221, 255, 0.25);
+  border-radius: 0.6rem;
+  background: rgba(169, 221, 255, 0.06);
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.projectJsonToggle::-webkit-details-marker {
+  display: none;
+}
+
+.projectJsonToggle::after {
+  content: "+";
+}
+
+.projectJsonDisclosure[open] > .projectJsonToggle::after {
+  content: "\2212";
+}
+
+.projectJsonToggle:hover {
+  background: rgba(169, 221, 255, 0.12);
+}
+
+.projectJsonToggle:focus-visible {
+  outline: 2px solid #76c4ff;
+  outline-offset: 3px;
+}
+
 .projectJsonTools {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -1088,6 +1127,7 @@
   font-size: 0.9rem;
 }
 
+.projectJsonPaste,
 .projectJsonPrompt {
   display: grid;
   grid-column: 1 / -1;
@@ -1098,8 +1138,13 @@
   background: rgba(11, 19, 28, 0.55);
 }
 
+.projectJsonPaste label,
 .projectJsonPrompt strong {
   color: var(--text);
+}
+
+.projectJsonPaste label {
+  font-weight: 600;
 }
 
 .projectJsonPrompt p {
@@ -1108,6 +1153,7 @@
   font-size: 0.9rem;
 }
 
+.projectJsonPaste textarea,
 .projectJsonPrompt textarea {
   width: 100%;
   min-height: 19rem;
@@ -1121,6 +1167,11 @@
   font: 0.78rem/1.55 Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Courier New, monospace;
 }
 
+.projectJsonPaste textarea {
+  min-height: 12rem;
+}
+
+.projectJsonPaste textarea:focus,
 .projectJsonPrompt textarea:focus {
   border-color: #76c4ff;
   box-shadow: 0 0 0 3px rgba(118, 196, 255, 0.12);

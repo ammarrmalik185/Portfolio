@@ -54,6 +54,7 @@ export default function ProjectEditor({ initialData, onSave, saveLabel = "Publis
     const [isPromptCopied, setIsPromptCopied] = useState(false);
     const [saveError, setSaveError] = useState("");
     const [jsonStatus, setJsonStatus] = useState("");
+    const [jsonText, setJsonText] = useState("");
     const editorRef = useRef(null);
     const importInputRef = useRef(null);
     const pendingContentRef = useRef(null);
@@ -83,17 +84,17 @@ export default function ProjectEditor({ initialData, onSave, saveLabel = "Publis
         }
     };
 
-    const importProjectJson = async event => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
+    const importProjectJson = async json => {
         setJsonStatus("");
         try {
-            const imported = JSON.parse(await file.text());
+            const imported = JSON.parse(json);
+            if (!imported || typeof imported !== "object" || Array.isArray(imported)) {
+                throw new Error("Project JSON needs to be an object with a title.");
+            }
             const metadata = imported.project || imported;
             const title = imported.title || metadata.title;
             if (!title || typeof title !== "string") {
-                throw new Error("A project JSON file needs a title.");
+                throw new Error("Project JSON needs a title.");
             }
 
             const content = imported.content && Array.isArray(imported.content.blocks)
@@ -111,16 +112,29 @@ export default function ProjectEditor({ initialData, onSave, saveLabel = "Publis
                 liveUrl: metadata.liveUrl || "",
                 repositoryUrl: metadata.repositoryUrl || "",
                 skills,
-                showDetails: metadata.showDetails === true
+                showDetails: metadata.showDetails === true || content.blocks.length > 0
             }));
             setStoredContent(content);
             await applyContentToEditor(content);
             setJsonStatus("Project JSON imported. Review it, then publish when ready.");
         } catch (error) {
             console.error("Unable to import project JSON", error);
-            setJsonStatus(error.message || "We could not read that JSON file.");
+            setJsonStatus(error.message || "We could not read that JSON.");
+        }
+    };
+
+    const importProjectJsonFile = async event => {
+        const input = event.target;
+        const file = input.files?.[0];
+        if (!file) return;
+
+        try {
+            await importProjectJson(await file.text());
+        } catch (error) {
+            console.error("Unable to read project JSON file", error);
+            setJsonStatus("We could not read that JSON file.");
         } finally {
-            event.target.value = "";
+            input.value = "";
         }
     };
 
@@ -209,27 +223,43 @@ export default function ProjectEditor({ initialData, onSave, saveLabel = "Publis
                 <p>The structured information creates a concise card and detail header. Use Editor.js for the full case study below.</p>
             </section>
 
-            <section className={styles.projectJsonTools}>
-                <div>
-                    <p className={styles.portfolioEyebrow}>AI-ready project JSON</p>
-                    <h2>Export a project for AI, or import a generated project.</h2>
-                    <p>Import accepts the JSON exported here, including title, project fields, and Editor.js blocks.</p>
-                </div>
-                <input ref={importInputRef} className={styles.jsonFileInput} type="file" accept="application/json,.json" onChange={importProjectJson} />
-                <div className={styles.projectJsonActions}>
-                    <BlueButton title="Import JSON" onClick={() => importInputRef.current?.click()} disabled={isSaving} />
-                    <BlueButton title={isExporting ? "Exporting..." : "Export JSON"} onClick={exportProjectJson} disabled={isSaving || isExporting} />
-                </div>
-                <div className={styles.projectJsonPrompt}>
+            <details className={styles.projectJsonDisclosure}>
+                <summary className={styles.projectJsonToggle}>Import / export JSON</summary>
+                <section className={styles.projectJsonTools}>
                     <div>
-                        <strong>Prompt for your AI</strong>
-                        <p>Give the AI this prompt together with your project files or project description.</p>
+                        <p className={styles.portfolioEyebrow}>AI-ready project JSON</p>
+                        <h2>Export a project for AI, or import a generated project.</h2>
+                        <p>Upload a JSON file or paste JSON below, including title, project fields, and Editor.js blocks. Imported content automatically enables project details.</p>
                     </div>
-                    <textarea readOnly value={projectJsonPrompt} aria-label="AI prompt for project JSON" />
-                    <BlueButton title={isPromptCopied ? "Copied" : "Copy prompt"} onClick={copyAiPrompt} />
-                </div>
-                {jsonStatus && <p className={styles.projectJsonStatus} role="status">{jsonStatus}</p>}
-            </section>
+                    <input ref={importInputRef} className={styles.jsonFileInput} type="file" accept="application/json,.json" onChange={importProjectJsonFile} />
+                    <div className={styles.projectJsonActions}>
+                        <BlueButton title="Import JSON file" onClick={() => importInputRef.current?.click()} disabled={isSaving} />
+                        <BlueButton title={isExporting ? "Exporting..." : "Export JSON"} onClick={exportProjectJson} disabled={isSaving || isExporting} />
+                    </div>
+                    <div className={styles.projectJsonPaste}>
+                        <label htmlFor="project-json-text">Paste project JSON</label>
+                        <textarea
+                            id="project-json-text"
+                            value={jsonText}
+                            onChange={event => setJsonText(event.target.value)}
+                            placeholder="Paste your project JSON here"
+                            rows={8}
+                            spellCheck={false}
+                            disabled={isSaving}
+                        />
+                        <BlueButton title="Import pasted JSON" onClick={() => importProjectJson(jsonText)} disabled={isSaving || !jsonText.trim()} />
+                    </div>
+                    <div className={styles.projectJsonPrompt}>
+                        <div>
+                            <strong>Prompt for your AI</strong>
+                            <p>Give the AI this prompt together with your project files or project description.</p>
+                        </div>
+                        <textarea readOnly value={projectJsonPrompt} aria-label="AI prompt for project JSON" />
+                        <BlueButton title={isPromptCopied ? "Copied" : "Copy prompt"} onClick={copyAiPrompt} />
+                    </div>
+                    {jsonStatus && <p className={styles.projectJsonStatus} role="status">{jsonStatus}</p>}
+                </section>
+            </details>
 
             <section className={styles.portfolioFields}>
                 <label className={styles.portfolioFieldWide}>
