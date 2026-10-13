@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }) {
     <Head>
       <title>{staticData.websiteData.title}</title>
       {staticData.websiteData.description && <meta name="description" content={staticData.websiteData.description} />}
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" type="image/png" href={`${staticData.pathingData.baseUrl}/favicon.png?v=1`} />
     </Head>
     <Header/>
     <Component className={styles.mainBody} {...pageProps} />
