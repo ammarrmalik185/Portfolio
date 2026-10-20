@@ -8,7 +8,6 @@ const staticData = require("../staticData.json");
 
 export default function Editor(){
     const router = useRouter();
-
     const [init, setInit] = useState(false)
     const [data, setData] = useState({blocks: null});
 

@@ -6,7 +6,7 @@ import Head from "next/head";
 const staticData = require("../staticData.json")
 import styles from "../styles/Home.module.css"
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component , pageProps }) {
   return <div>
     <Head>
       <title>{staticData.websiteData.title}</title>

@@ -6,11 +6,11 @@ import { Collapse } from "react-bootstrap";
 
 export default function Blogpost() {
     const [title, setTitle] = useState("");
-    const [content, setContent] = useState([])
+    const [content , setContent] = useState([]);
     const [isInit, setIsInit] = useState(false);
     useEffect(() => {
         if(!isInit){
-            firestore.collection("portfolios").doc("ammarRashidMalik").get().then(snapshot => {
+            firestore.collection("portfolios").doc("ammarRashidMalik").get().then((snapshot: any) => {
                 if (snapshot.exists) {
                     let data = snapshot.data();
                     setTitle(data.title);

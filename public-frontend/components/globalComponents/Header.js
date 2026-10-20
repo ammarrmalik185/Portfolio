@@ -9,7 +9,6 @@ import firebase from "firebase";
 
 export default function Header() {
     const router = useRouter();
-    console.log(firebase.auth());
     const [user, loading, error] = useAuthState(firebase.auth());
     const currentPage = detectPage(router.pathname);
     let isLogged = false;
