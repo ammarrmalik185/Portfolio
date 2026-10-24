@@ -13,6 +13,7 @@
     "rules": "database/database.rules.json"
   },
   "hosting": {
+    "site": "ammarportfolio",
     "public": "hosting",
     "ignore": [
       "firebase.json",
