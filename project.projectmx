@@ -9,5 +9,10 @@
       "url": "https://ammarrmalik185.github.io/Portfolio/",
       "type": "Web"
     }
-  ]
+  ],
+  "tracking": {
+    "url": "https://paradox-software.youtrack.cloud",
+    "type": "youtrack",
+    "project_id": "0-2"
+  }
 }
