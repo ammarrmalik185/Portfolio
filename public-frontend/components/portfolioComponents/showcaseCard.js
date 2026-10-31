@@ -3,10 +3,12 @@ import styles from "../../styles/Home.module.css";
 import { FaArrowRight } from "react-icons/fa";
 import { getProjectTags } from "../../services/projectTags";
 import FallbackImage from "../basicComponents/FallbackImage";
+import { normalisePlatforms } from "../../services/projectPlatforms";
 
 export default function ShowcaseCard({ item, type, href, fallbackImage }) {
     const metadata = item.project || {};
     const tags = getProjectTags(item).slice(0, 4);
+    const platforms = normalisePlatforms(metadata.platforms);
 
     return (
         <article className={styles.showcaseCard}>
@@ -15,6 +17,9 @@ export default function ShowcaseCard({ item, type, href, fallbackImage }) {
                 <p className={styles.showcaseType}>{type}</p>
                 <h3>{item.title || "Untitled"}</h3>
                 {metadata.summary && <p className={styles.showcaseSummary}>{metadata.summary}</p>}
+                {platforms.length > 0 && <div className={styles.projectPlatforms} aria-label="Platforms">
+                    {platforms.map(platform => <span key={platform}>{platform}</span>)}
+                </div>}
                 {tags.length > 0 && <div className={styles.showcaseTags}>
                     {tags.map(tag => <span key={tag}>{tag}</span>)}
                 </div>}

@@ -55,7 +55,7 @@
   padding: clamp(2rem, 5vw, 4.5rem);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.5rem;
-  background: linear-gradient(135deg, #171d26 0%, var(--primary) 56%, #223b5a 140%);
+  background: linear-gradient(135deg, #0b0e13 0%, var(--primary) 56%, #132236 140%);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
 }
 
@@ -66,7 +66,7 @@
   width: 27rem;
   height: 27rem;
   border-radius: 50%;
-  background: rgba(30, 135, 227, 0.2);
+  background: rgba(30, 135, 227, 0.1);
   content: "";
   filter: blur(8px);
 }
@@ -948,7 +948,7 @@
   width: 100%;
   height: 12rem;
   object-fit: cover;
-  background: #1a222d;
+  background: #0b0e13;
 }
 
 .blogCardContent {
@@ -1019,16 +1019,16 @@
 
 .blogEditor .portfolioEditorIntro {
   background:
-    radial-gradient(circle at right top, rgba(30, 135, 227, 0.28), transparent 23rem),
+    radial-gradient(circle at right top, rgba(30, 135, 227, 0.14), transparent 23rem),
     var(--primary);
 }
 
 .blogEditor .portfolioFields {
-  background: rgba(25, 37, 51, 0.62);
+  background: var(--primary);
 }
 
 .blogEditor .portfolioEditorContent {
-  background: #151c25;
+  background: var(--primary);
 }
 
 .blogReadingShell {
@@ -1245,7 +1245,77 @@
   padding: clamp(1.5rem, 4vw, 2.5rem);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.25rem;
-  background: rgba(33, 37, 41, 0.5);
+  background: var(--primary);
+}
+
+.platformSelector {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--text);
+}
+
+.platformSelector legend {
+  float: none;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.platformSelector p {
+  margin: 0 0 0.75rem;
+  color: var(--textSecondary);
+  font-size: 0.9rem;
+}
+
+.platformOptions,
+.projectPlatforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.platformOptions button {
+  min-height: 2.75rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.6rem;
+  color: var(--textSecondary);
+  background: var(--secondary);
+  font: inherit;
+}
+
+.platformOptions button:hover,
+.platformOptions button[aria-pressed="true"] {
+  border-color: #83c8ff;
+  color: #d6efff;
+  background: #142639;
+}
+
+.platformOptions button:focus-visible {
+  outline: 2px solid #83c8ff;
+  outline-offset: 3px;
+}
+
+.platformOptions button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.projectPlatforms {
+  align-items: center;
+  margin: 0.75rem 0;
+  color: var(--textSecondary);
+  font-size: 0.8rem;
+}
+
+.projectPlatforms span {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgba(131, 200, 255, 0.25);
+  border-radius: 0.4rem;
+  color: #bde2ff;
+  background: var(--secondary);
 }
 
 .portfolioFields label {
@@ -1526,7 +1596,7 @@
   outline: none;
   resize: vertical;
   color: #d9f2ff;
-  background: #101720;
+  background: var(--secondary);
   font: 0.78rem/1.55 Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Courier New, monospace;
 }
 
@@ -1723,7 +1793,7 @@
   padding: 0.45rem;
   border: 1px solid rgba(255, 255, 255, 0.13);
   border-radius: 999px;
-  background: rgba(23, 29, 38, 0.82);
+  background: rgba(10, 13, 17, 0.92);
   box-shadow: 0 14px 38px rgba(0, 0, 0, 0.26);
   backdrop-filter: blur(18px);
 }
@@ -1798,7 +1868,7 @@
   padding: 0.45rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 0.8rem;
-  background: #171d26;
+  background: var(--primary);
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
 }
 
@@ -1823,8 +1893,8 @@
   border-top: 1px solid rgba(169, 221, 255, 0.14);
   color: var(--text);
   background:
-    radial-gradient(circle at 12% 0%, rgba(30, 135, 227, 0.25), transparent 34rem),
-    #11171f;
+    radial-gradient(circle at 12% 0%, rgba(30, 135, 227, 0.12), transparent 34rem),
+    #080b0f;
 }
 
 .footerContainer {
@@ -2079,7 +2149,7 @@ h6.customHtmlHeading {
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 0.9rem;
   object-fit: contain;
-  background: #111820;
+  background: var(--secondary);
 }
 
 .customHtmlImageCaption {
@@ -2101,7 +2171,7 @@ h6.customHtmlHeading {
   margin: 2rem 0;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 0.8rem;
-  background: #151d26;
+  background: var(--primary);
 }
 
 .customHtmlTable {
@@ -2165,7 +2235,7 @@ h6.customHtmlHeading {
   border: 1px solid rgba(169, 221, 255, 0.18);
   border-radius: 0.8rem;
   color: #d9f2ff;
-  background: #101720;
+  background: var(--secondary);
   font-size: 0.93rem;
   line-height: 1.65;
   font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;

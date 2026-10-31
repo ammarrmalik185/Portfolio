@@ -8,6 +8,7 @@ import styles from "../../styles/Home.module.css";
 import staticData from "../../staticData.json";
 import EntryManagementActions from "../../components/basicComponents/EntryManagementActions";
 import FallbackImage from "../../components/basicComponents/FallbackImage";
+import { normalisePlatforms } from "../../services/projectPlatforms";
 
 const CustomHtmlViewer = dynamic(
     () => import("../../components/customHtmlTemplate/customHtmlViewer"),
@@ -39,6 +40,7 @@ export default function ProjectPost() {
     if (!project) return null;
 
     const metadata = project.project || {};
+    const platforms = normalisePlatforms(metadata.platforms);
     const skills = Array.isArray(metadata.skills)
         ? metadata.skills
         : typeof project.tags === "string" ? project.tags.split(/[,\s]+/).filter(Boolean) : [];
@@ -52,6 +54,10 @@ export default function ProjectPost() {
                         <p className={styles.portfolioEyebrow}>Project</p>
                         <h1>{project.title}</h1>
                         {metadata.summary && <p className={styles.projectSummary}>{metadata.summary}</p>}
+                        {platforms.length > 0 && <div className={styles.projectPlatforms} aria-label="Platforms">
+                            <strong>Platforms</strong>
+                            {platforms.map(platform => <span key={platform}>{platform}</span>)}
+                        </div>}
                         {skills.length > 0 && <div className={styles.showcaseTags}>
                             {skills.map(skill => <span key={skill}>{skill}</span>)}
                         </div>}

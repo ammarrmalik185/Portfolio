@@ -4,6 +4,7 @@ import styles from "../../styles/Home.module.css";
 import { BlueButton, GreenButton } from "../basicComponents/CustomButtons";
 import { normaliseEditorBlocks } from "../../services/editorContent";
 import ImageUploadField from "../basicComponents/ImageUploadField";
+import { PROJECT_PLATFORMS, normalisePlatforms } from "../../services/projectPlatforms";
 
 const CustomHtmlEditor = dynamic(
     () => import("../customHtmlTemplate/customHtmlEditor"),
@@ -19,6 +20,7 @@ function initialProject(data) {
         image: metadata.image || data.image || "",
         liveUrl: metadata.liveUrl || "",
         repositoryUrl: metadata.repositoryUrl || "",
+        platforms: normalisePlatforms(metadata.platforms),
         skills: Array.isArray(metadata.skills) ? metadata.skills.join(", ") : data.tags || "",
         showDetails: metadata.showDetails === true
     };
@@ -35,6 +37,7 @@ const projectJsonPrompt = `Analyze the project files and description I provide. 
     "liveUrl": "Optional live URL or empty string",
     "repositoryUrl": "Optional repository URL or empty string",
     "skills": ["Skill or technology"],
+    "platforms": ["Web", "Android"],
     "showDetails": false
   },
   "content": {
@@ -44,7 +47,7 @@ const projectJsonPrompt = `Analyze the project files and description I provide. 
     ]
   }
 }
-Use only supported Editor.js block types: header, paragraph, list, image, quote, code, table, delimiter, and raw. Keep content.blocks as an array. Omit any information you cannot infer instead of inventing it.`;
+For project.platforms, select zero or more of Android, Web, iOS, Windows, macOS, and Linux. Use only supported Editor.js block types: header, paragraph, list, image, quote, code, table, delimiter, and raw. Keep content.blocks as an array. Omit any information you cannot infer instead of inventing it.`;
 
 export default function ProjectEditor({ initialData, onSave, saveLabel = "Publish project" }) {
     const [project, setProject] = useState(() => initialProject(initialData));
@@ -111,6 +114,7 @@ export default function ProjectEditor({ initialData, onSave, saveLabel = "Publis
                 image: metadata.image || imported.image || "",
                 liveUrl: metadata.liveUrl || "",
                 repositoryUrl: metadata.repositoryUrl || "",
+                platforms: normalisePlatforms(metadata.platforms),
                 skills,
                 showDetails: metadata.showDetails === true || content.blocks.length > 0
             }));
@@ -287,6 +291,21 @@ export default function ProjectEditor({ initialData, onSave, saveLabel = "Publis
                     Skills and tools
                     <input value={project.skills} onChange={event => updateProject("skills", event.target.value)} placeholder="Next.js, Firebase, Figma" />
                 </label>
+                <fieldset className={`${styles.portfolioFieldWide} ${styles.platformSelector}`}>
+                    <legend>Platforms</legend>
+                    <p>Select all platforms this project supports.</p>
+                    <div className={styles.platformOptions}>
+                        {PROJECT_PLATFORMS.map(platform => <button
+                            key={platform}
+                            type="button"
+                            aria-pressed={project.platforms.includes(platform)}
+                            disabled={isSaving}
+                            onClick={() => updateProject("platforms", project.platforms.includes(platform)
+                                ? project.platforms.filter(value => value !== platform)
+                                : [...project.platforms, platform])}
+                        >{platform}</button>)}
+                    </div>
+                </fieldset>
             </section>
 
             <section className={styles.portfolioEditorContent}>

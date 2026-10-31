@@ -1,6 +1,6 @@
 export let DarkTheme = {
-    primary: "rgba(33,37,41, 1)",
-    secondary: "#4b4b4b",
+    primary: "#101318",
+    secondary: "#07090c",
     text: "#ffffff",
     textSecondary: "#b7b7b7",
     highlights: "#9d9b60",

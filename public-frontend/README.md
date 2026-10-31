@@ -1,5 +1,23 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Firebase Hosting
+
+The production site is `ammarportfolio` in Firebase project `ammarportfolioweb`:
+https://ammarportfolio.web.app
+
+From `public-frontend`, sign in once with
+`npx --cache .next/firebase-cli-cache --yes firebase-tools login`, then run:
+
+```bash
+npm run deploy:hosting
+```
+
+This builds the current source, exports static pages to `../firebase-backend/hosting`,
+and deploys only Firebase Hosting. On Windows, `firebase-backend/deploy hosting.bat`
+runs the same workflow. The site uses the domain root as its base path.
+
+To prepare the hosting files without deploying, run `npm run exportToHosting`.
+
 ## Getting Started
 
 First, run the development server:

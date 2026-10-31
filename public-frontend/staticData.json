@@ -10,7 +10,7 @@
     "measurementId": "G-3WZYEMFQWQ"
   },
   "pathingData": {
-    "baseUrl": "/Portfolio",
+    "baseUrl": "",
     "pageEnum": {
       "home": 0,
       "homeEdit": 1,

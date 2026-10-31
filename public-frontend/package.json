@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "export": "next build && next export",
-    "exportToHosting": "next export && next export -o ../firebase-backend/hosting",
+    "exportToHosting": "npm run build && next export -o ../firebase-backend/hosting",
+    "deploy:hosting": "npm run exportToHosting && npx --cache .next/firebase-cli-cache --yes firebase-tools deploy --only hosting --project ammarportfolioweb --config ../firebase-backend/firebase.json",
     "start": "next start",
     "lint": "next lint",
     "test": "node --test services/collectionOrdering.test.mjs services/projectTags.test.mjs services/pagination.test.mjs"

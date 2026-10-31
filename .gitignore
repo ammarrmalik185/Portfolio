@@ -17,6 +17,7 @@ archive/*/node_modules
 
 # next.js
 /.next/
+**/.next/
 /out/
 
 # production
@@ -29,6 +30,7 @@ build/
 
 # debug
 npm-debug.log*
+firebase-debug*.log
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*

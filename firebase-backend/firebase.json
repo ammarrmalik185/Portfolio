@@ -15,6 +15,7 @@
   "hosting": {
     "site": "ammarportfolio",
     "public": "hosting",
+    "cleanUrls": true,
     "ignore": [
       "firebase.json",
       "**/.*",
