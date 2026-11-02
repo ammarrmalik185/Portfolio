@@ -14,5 +14,6 @@
     "url": "https://paradox-software.youtrack.cloud",
     "type": "youtrack",
     "project_id": "0-2"
-  }
+  },
+  "organization": "ParadoX Software"
 }
