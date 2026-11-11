@@ -1,9 +1,9 @@
+import basePath from "../services/basePath";
 import styles from '../styles/Home.module.css'
 import {useRouter} from "next/router";
 import {auth, firestore} from "../services/firebaseService"
 import {useState} from "react";
 import {Alert} from 'react-bootstrap';
-import staticData from "../staticData.json";
 
 export default function Signup() {
     const Router = useRouter();
@@ -70,7 +70,7 @@ export default function Signup() {
                 })
             }}>Signup
             </button>
-            <div className={styles.loginFormText}>Already a user? <a href={staticData.pathingData.baseUrl + "/login"}>Login
+            <div className={styles.loginFormText}>Already a user? <a href={basePath + "/login"}>Login
                 here</a></div>
         </form>
     )

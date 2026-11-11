@@ -1,9 +1,10 @@
+import basePath from "../../services/basePath";
 import { useState } from "react";
 import staticData from "../../staticData.json";
 
 export default function FallbackImage({ src, legacySrc, fallbackSrc, kind = "project", alt = "", ...props }) {
     const [failedSources, setFailedSources] = useState([]);
-    const baseUrl = staticData.pathingData.baseUrl;
+    const baseUrl = basePath;
     const localDefault = `${baseUrl}/images/default-${kind}.svg`;
     const resolveSource = source => {
         if (typeof source !== "string" || !source.trim()) return null;

@@ -1,3 +1,4 @@
+import basePath from "../../services/basePath";
 import styles from "../../styles/Home.module.css";
 import { auth } from "../../services/firebaseService";
 import { useRouter } from "next/router";
@@ -33,7 +34,7 @@ export default function Header() {
         <nav className={styles.floatingNavigation} aria-label="Primary navigation">
             <div className={styles.navigationLinks}>
                 {primaryLinks.map(link => (
-                    <a key={link.href} href={`${staticData.pathingData.baseUrl}${link.href}`} className={linkClassName(link.page)}>
+                    <a key={link.href} href={`${basePath}${link.href}`} className={linkClassName(link.page)}>
                         {link.label}
                     </a>
                 ))}
@@ -42,17 +43,17 @@ export default function Header() {
                 {(isAdmin || isLogged) && <details className={styles.navigationMenu}>
                     <summary>Manage</summary>
                     <div className={styles.navigationMenuPanel}>
-                        {isAdmin && <a href={`${staticData.pathingData.baseUrl}/edit`}>Edit portfolio</a>}
+                        {isAdmin && <a href={`${basePath}/edit`}>Edit portfolio</a>}
                         {isLogged && <>
-                            <a href={`${staticData.pathingData.baseUrl}/projects/edit`}>New project</a>
-                            <a href={`${staticData.pathingData.baseUrl}/experiences/edit`}>New experience</a>
-                            <a href={`${staticData.pathingData.baseUrl}/blogs/edit`}>New post</a>
+                            <a href={`${basePath}/projects/edit`}>New project</a>
+                            <a href={`${basePath}/experiences/edit`}>New experience</a>
+                            <a href={`${basePath}/blogs/edit`}>New post</a>
                         </>}
                     </div>
                 </details>}
                 {isLogged
                     ? <button type="button" className={styles.navigationAccountButton} onClick={() => auth.signOut()}>Sign out</button>
-                    : <a className={styles.navigationAccountButton} href={`${staticData.pathingData.baseUrl}/login`}>Sign in</a>}
+                    : <a className={styles.navigationAccountButton} href={`${basePath}/login`}>Sign in</a>}
             </div>
         </nav>
     );

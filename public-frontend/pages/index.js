@@ -1,3 +1,4 @@
+import basePath from "../services/basePath";
 import styles from '../styles/Home.module.css'
 import { useEffect, useState } from "react";
 import { firestore } from "../services/firebaseService";
@@ -193,7 +194,7 @@ export default function Blogpost() {
                                     <p className={styles.portfolioEyebrow}>Selected work</p>
                                     <h2>Projects</h2>
                                 </div>
-                                <a href={`${staticData.pathingData.baseUrl}/projects`} className={styles.showcaseAllLink}>View all projects <FaArrowRight aria-hidden="true" /></a>
+                                <a href={`${basePath}/projects`} className={styles.showcaseAllLink}>View all projects <FaArrowRight aria-hidden="true" /></a>
                             </div>
                             <div className={styles.showcaseGrid}>
                                 {projects.map(project => <ShowcaseCard key={project.id} item={project} type="Project" href="/projects/post" fallbackImage={staticData.defaults.projectPicture} />)}
@@ -205,7 +206,7 @@ export default function Blogpost() {
                                     <p className={styles.portfolioEyebrow}>Work and education</p>
                                     <h2>Experience</h2>
                                 </div>
-                                <a href={`${staticData.pathingData.baseUrl}/experiences`} className={styles.showcaseAllLink}>View all experience <FaArrowRight aria-hidden="true" /></a>
+                                <a href={`${basePath}/experiences`} className={styles.showcaseAllLink}>View all experience <FaArrowRight aria-hidden="true" /></a>
                             </div>
                             <div className={styles.showcaseGrid}>
                                 {experiences.map(experience => <ExperienceCard key={experience.id} experience={experience} />)}

@@ -19,6 +19,7 @@ archive/*/node_modules
 /.next/
 **/.next/
 /out/
+/public-frontend/out/
 
 # production
 /build/*

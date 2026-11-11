@@ -18,6 +18,18 @@ runs the same workflow. The site uses the domain root as its base path.
 
 To prepare the hosting files without deploying, run `npm run exportToHosting`.
 
+## GitHub Pages
+
+The Pages workflow gets the deployment base path from `actions/configure-pages`
+and sets `NEXT_PUBLIC_BASE_PATH` for both the build and static export. For this
+repository that path is `/Portfolio`. Next.js assets, navigation, the favicon,
+and local fallback images all use the same path.
+
+Use **GitHub Actions** as the source in repository Settings > Pages, then push
+to `master` or run the Pages workflow manually. Deploy the complete exported
+artifact, including its `_next` directory. Builds without `NEXT_PUBLIC_BASE_PATH`
+use `pathingData.baseUrl` from `staticData.json` (empty for Firebase Hosting).
+
 ## Getting Started
 
 First, run the development server:

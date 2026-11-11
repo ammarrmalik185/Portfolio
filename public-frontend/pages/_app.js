@@ -1,3 +1,4 @@
+import basePath from "../services/basePath";
 import '../styles/globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from "../components/globalComponents/Header";
@@ -11,7 +12,7 @@ function MyApp({ Component, pageProps }) {
     <Head>
       <title>{staticData.websiteData.title}</title>
       {staticData.websiteData.description && <meta name="description" content={staticData.websiteData.description} />}
-      <link rel="icon" type="image/png" href={`${staticData.pathingData.baseUrl}/favicon.png?v=1`} />
+      <link rel="icon" type="image/png" href={`${basePath}/favicon.png?v=1`} />
     </Head>
     <Header/>
     <Component className={styles.mainBody} {...pageProps} />
