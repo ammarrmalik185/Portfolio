@@ -1,4 +1,5 @@
 import basePath from "../services/basePath";
+import useScrollReveal from "../services/useScrollReveal";
 import styles from '../styles/Home.module.css'
 import { useEffect, useState } from "react";
 import { firestore } from "../services/firebaseService";
@@ -54,6 +55,7 @@ function getProfile(portfolio) {
 }
 
 export default function Blogpost() {
+    const revealContainer = useScrollReveal();
     const [title, setTitle] = useState("");
     const [content, setContent] = useState({});
     const [portfolio, setPortfolio] = useState({});
@@ -128,7 +130,7 @@ export default function Blogpost() {
     const profile = getProfile(portfolio);
 
     return (
-        <div className={styles.portfolioPage}>
+        <div className={styles.portfolioPage} ref={revealContainer}>
             <main className={styles.portfolioShell}>
                 {isLoading && !title && <section className={styles.portfolioLoading} role="status" aria-live="polite">
                     <span className={styles.loadingSpinner} aria-hidden="true" />
@@ -145,7 +147,7 @@ export default function Blogpost() {
                 {title && <>
                     <section className={styles.portfolioHero}>
                         <div className={styles.portfolioHeroContent}>
-                            <div className={styles.portfolioAvatarFrame}>
+                            <div className={styles.portfolioAvatarFrame} data-reveal>
                                 {/* External image URLs are author-managed in the portfolio profile. */}
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img src={profile.image} alt={`${profile.name} profile`} className={styles.portfolioAvatar} />
@@ -179,17 +181,17 @@ export default function Blogpost() {
                         </div>
                     </section>
                     {profile.showDetails && <section className={styles.portfolioDetails}>
-                        <div className={styles.portfolioDetailsHeading}>
+                        <div className={styles.portfolioDetailsHeading} data-reveal>
                             <p className={styles.portfolioEyebrow}>More about me</p>
                             <h2>Selected experience and work</h2>
                         </div>
-                        <div className={styles.portfolioDetailsContent}>
+                        <div className={styles.portfolioDetailsContent} data-reveal>
                             <CustomHtmlViewer contentBlocks={content.blocks || []} />
                         </div>
                     </section>}
                     {(projects.length > 0 || experiences.length > 0) && <section className={styles.portfolioShowcase}>
                         {projects.length > 0 && <div className={styles.showcaseSection}>
-                            <div className={styles.showcaseHeading}>
+                            <div className={styles.showcaseHeading} data-reveal>
                                 <div>
                                     <p className={styles.portfolioEyebrow}>Selected work</p>
                                     <h2>Projects</h2>
@@ -201,7 +203,7 @@ export default function Blogpost() {
                             </div>
                         </div>}
                         {experiences.length > 0 && <div className={styles.showcaseSection}>
-                            <div className={styles.showcaseHeading}>
+                            <div className={styles.showcaseHeading} data-reveal>
                                 <div>
                                     <p className={styles.portfolioEyebrow}>Work and education</p>
                                     <h2>Experience</h2>

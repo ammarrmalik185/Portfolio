@@ -10,7 +10,7 @@
     "deploy:hosting": "npm run exportToHosting && npx --cache .next/firebase-cli-cache --yes firebase-tools deploy --only hosting --project ammarportfolioweb --config ../firebase-backend/firebase.json",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --test services/collectionOrdering.test.mjs services/projectTags.test.mjs services/pagination.test.mjs"
+    "test": "node --test services/collectionOrdering.test.mjs services/projectTags.test.mjs services/pagination.test.mjs services/projectPlatforms.test.mjs"
   },
   "dependencies": {
     "@editorjs/code": "^2.8.0",

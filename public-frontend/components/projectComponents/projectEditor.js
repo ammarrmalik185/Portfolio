@@ -47,10 +47,11 @@ const projectJsonPrompt = `Analyze the project files and description I provide. 
     ]
   }
 }
-For project.platforms, select zero or more of Android, Web, iOS, Windows, macOS, and Linux. Use only supported Editor.js block types: header, paragraph, list, image, quote, code, table, delimiter, and raw. Keep content.blocks as an array. Omit any information you cannot infer instead of inventing it.`;
+For project.platforms, use an array of platform names. Common platforms are Android, Web, iOS, Windows, macOS, and Linux; custom names such as PlayStation, Xbox, or Meta Quest are also supported. Use only supported Editor.js block types: header, paragraph, list, image, quote, code, table, delimiter, and raw. Keep content.blocks as an array. Omit any information you cannot infer instead of inventing it.`;
 
 export default function ProjectEditor({ initialData, onSave, saveLabel = "Publish project" }) {
     const [project, setProject] = useState(() => initialProject(initialData));
+    const [customPlatform, setCustomPlatform] = useState("");
     const [storedContent, setStoredContent] = useState(() => initialData.content || { blocks: [] });
     const [isSaving, setIsSaving] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
@@ -64,6 +65,15 @@ export default function ProjectEditor({ initialData, onSave, saveLabel = "Publis
 
     const updateProject = (field, value) => {
         setProject(currentProject => ({ ...currentProject, [field]: value }));
+    };
+
+    const addCustomPlatform = () => {
+        if (isSaving || !customPlatform.trim()) return;
+        setProject(currentProject => ({
+            ...currentProject,
+            platforms: normalisePlatforms([...currentProject.platforms, customPlatform])
+        }));
+        setCustomPlatform("");
     };
 
     const applyContentToEditor = async (content) => {
@@ -119,6 +129,7 @@ export default function ProjectEditor({ initialData, onSave, saveLabel = "Publis
                 showDetails: metadata.showDetails === true || content.blocks.length > 0
             }));
             setStoredContent(content);
+            setCustomPlatform("");
             await applyContentToEditor(content);
             setJsonStatus("Project JSON imported. Review it, then publish when ready.");
         } catch (error) {
@@ -293,7 +304,7 @@ export default function ProjectEditor({ initialData, onSave, saveLabel = "Publis
                 </label>
                 <fieldset className={`${styles.portfolioFieldWide} ${styles.platformSelector}`}>
                     <legend>Platforms</legend>
-                    <p>Select all platforms this project supports.</p>
+                    <p>Select all platforms this project supports, or add your own.</p>
                     <div className={styles.platformOptions}>
                         {PROJECT_PLATFORMS.map(platform => <button
                             key={platform}
@@ -304,6 +315,31 @@ export default function ProjectEditor({ initialData, onSave, saveLabel = "Publis
                                 ? project.platforms.filter(value => value !== platform)
                                 : [...project.platforms, platform])}
                         >{platform}</button>)}
+                        {project.platforms.filter(platform => !PROJECT_PLATFORMS.includes(platform)).map(platform => <button
+                            key={platform}
+                            type="button"
+                            aria-label={`Remove platform ${platform}`}
+                            aria-pressed="true"
+                            disabled={isSaving}
+                            onClick={() => updateProject("platforms", project.platforms.filter(value => value !== platform))}
+                        >{platform} <span aria-hidden="true">×</span></button>)}
+                    </div>
+                    <label className={styles.customPlatformLabel} htmlFor="custom-platform">Custom platform</label>
+                    <div className={styles.customPlatformControls}>
+                        <input
+                            id="custom-platform"
+                            value={customPlatform}
+                            onChange={event => setCustomPlatform(event.target.value)}
+                            onKeyDown={event => {
+                                if (event.key === "Enter") {
+                                    event.preventDefault();
+                                    addCustomPlatform();
+                                }
+                            }}
+                            placeholder="e.g. Meta Quest or PlayStation"
+                            disabled={isSaving}
+                        />
+                        <BlueButton title="Add platform" onClick={addCustomPlatform} disabled={isSaving || !customPlatform.trim()} />
                     </div>
                 </fieldset>
             </section>

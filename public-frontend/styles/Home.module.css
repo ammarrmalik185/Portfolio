@@ -49,6 +49,40 @@
   margin: 0 auto;
 }
 
+.revealPending {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.revealVisible {
+  animation: portfolioReveal 700ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) backwards;
+}
+
+.revealPending:focus-within {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes portfolioReveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revealPending,
+  .revealVisible {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
 .portfolioHero {
   position: relative;
   overflow: hidden;
@@ -1267,6 +1301,23 @@
   margin: 0 0 0.75rem;
   color: var(--textSecondary);
   font-size: 0.9rem;
+}
+
+.customPlatformLabel {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.customPlatformControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.customPlatformControls input {
+  flex: 1 1 14rem;
+  min-width: 0;
 }
 
 .platformOptions,
